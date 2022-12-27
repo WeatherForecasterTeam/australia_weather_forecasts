@@ -1,5 +1,4 @@
 # Australia Weather Forecasts
-
 ---
 
 
