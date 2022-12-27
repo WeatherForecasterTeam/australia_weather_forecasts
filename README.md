@@ -11,10 +11,10 @@ This repository is still a work in progress, and the contents of these folders m
 
 ## Folders
 
-* sandbox : testing environment for experimenting with new code and configurations.
+* <b>sandbox</b> : testing environment for experimenting with new code and configurations.
 wip-project: A branch for work in progress on the project.
 
-* data :  folder containing data used by the project, such as weather forecast data and location information.
+* <b>data</b> :  folder containing data used by the project, such as weather forecast data and location information.
 
 
 ## Versioning
