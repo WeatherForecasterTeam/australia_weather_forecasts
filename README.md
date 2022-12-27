@@ -12,6 +12,19 @@ This repository is still a work in progress, and the contents of these folders m
 wip-project: A branch for work in progress on the project.
 
 * <b>data</b> :  folder containing data used by the project, such as weather forecast data and location information.
+* <b>utils</b> : folder contains utility scripts and functions used in the project. These scripts and functions can be used to perform common tasks such as reading and writing files, connecting to databases, or executing HTTP requests.
+
+		- load_csv_from_github.py #fonction qui lit un fichier CSV à partir du dépot GitHub et le charge dans un dataframe Pandas. (rest un 1 bug à résoudre)
+
+## Loading the Data
+
+To load the `weatherAUS.csv` data in a notebook on Google Colab or JupyterLab, please use the following URL:
+
+[http://bit.ly/3GkgKxd](http://bit.ly/3GkgKxd)
+
+This URL will provide access to the data file, which can be loaded into the notebook using the appropriate commands or functions.
+
+Please note that the data may not be accessible if accessed using a different URL.
 
 
 ## Versioning
