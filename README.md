@@ -19,7 +19,7 @@ wip-project: A branch for work in progress on the project.
 
 We follow the [Semantic Versioning](https://semver.org/) guidelines for versioning our releases.
 
-For the versions available, see the [tags on this repository](https://github.com/your-username/your-project/tags).
+For the versions available, see the [tags on this repository](https://github.com/WeatherForecasterTeam/australia_weather_forecasts/tags).
 
 ## Changelog
 
