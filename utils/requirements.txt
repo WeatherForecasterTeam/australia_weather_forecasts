@@ -1,19 +1,19 @@
-pandas==1.1.5
-numpy==1.18.1
-scipy==1.5.2
-matplotlib==3.1.2
-seaborn==0.11.0
-bokeh==2.2.1
-plotly==3.10.0
-scikit-learn==0.22.2.post1
-tensorflow==2.0.0
-beautifulsoup4==4.5.3
-xgboost==0.82
+pandas
+numpy
+scipy
+matplotlib
+seaborn
+bokeh
+plotly
+scikit-learn
+tensorflow
+beautifulsoup
+xgboost
 jupyter
 jupyterlab
-nbconvert==5.5.0
-nbformat==4.4.0
-convertdate==2.2.0
+nbconvert
+nbformat
+convertdate
 
 
 
