@@ -7,14 +7,12 @@ bokeh
 plotly
 scikit-learn
 tensorflow
-beautifulsoup
+beautifulsoup4
 xgboost
 jupyter
 jupyterlab
 nbconvert
 nbformat
-convertdate
-
 
 
 
