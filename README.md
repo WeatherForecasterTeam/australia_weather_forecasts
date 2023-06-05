@@ -1,38 +1,28 @@
-# Australia Weather Forecasts
----
+## Prévisions météorologiques en Australie
+Ce référentiel contient le code source et les données du projet réalisé dans le cadre de la formation continue DST-OCT22. L'objectif principal de ce projet est de prédire la pluie du lendemain en Australie.
 
+Date de soumission du projet au chef de groupe (Mage) : 06/06/2023
 
-This repository contains the source code and data for a project that provides weather forecasts in Australia.
+## Dossiers
 
-This repository is still a work in progress, and the contents of these folders may change as the project evolves. Please use caution when working with the code and data in this repository, as it may not yet be fully tested or stable.
+* <b>archive</b> : ce dossier contient les tests et les expérimentations archivées.
+* <b>data</b> : ce dossier contient les données utilisées par le projet, telles que les données de prévisions météorologiques et les informations de localisation.
+* <b>notebooks</b> : ce dossier contient le code du projet, y compris les notebooks d'exploration des données, de prétraitement et de modélisation.
+* <b>utils</b> : ce dossier contient des scripts et des fonctions utilitaires utilisés dans le projet. Ces scripts et fonctions permettent d'effectuer des tâches courantes telles que la lecture et l'écriture de fichiers, la connexion aux bases de données ou l'exécution de requêtes HTTP.
+* <b>webapp_wf</b> : ce dossier contient des scripts pour la création de l'application web avec Streamlit.
 
-## Folders
+## Chargement des données
 
-* <b>sandbox</b> : testing environment for experimenting with new code and configurations.
-wip-project: A branch for work in progress on the project.
-
-* <b>data</b> :  folder containing data used by the project, such as weather forecast data and location information.
-* <b>utils</b> : folder contains utility scripts and functions used in the project. These scripts and functions can be used to perform common tasks such as reading and writing files, connecting to databases, or executing HTTP requests.
-
-		- load_csv_from_github.py #fonction qui lit un fichier CSV à partir du dépot GitHub et le charge dans un dataframe Pandas. (rest un 1 bug à résoudre)
-
-## Loading the Data
-
-To load the `weatherAUS.csv` data in a notebook on Google Colab or JupyterLab, please use the following URL:
+Pour charger les données `weatherAUS.csv` dans un notebook sur Google Colab ou JupyterLab, veuillez utiliser l'URL suivante :
 
 [http://bit.ly/3GkgKxd](http://bit.ly/3GkgKxd)
 
-This URL will provide access to the data file, which can be loaded into the notebook using the appropriate commands or functions.
+## Gestion des versions
 
-Please note that the data may not be accessible if accessed using a different URL.
+Nous suivons les directives du [Versionnement Sémantique](https://semver.org/) pour numéroter nos versions.
 
+Pour les versions disponibles, consultez les [étiquettes de ce référentiel](https://github.com/WeatherForecasterTeam/australia_weather_forecasts/tags).
 
-## Versioning
+## Journal des modifications
 
-We follow the [Semantic Versioning](https://semver.org/) guidelines for versioning our releases.
-
-For the versions available, see the [tags on this repository](https://github.com/WeatherForecasterTeam/australia_weather_forecasts/tags).
-
-## Changelog
-
-Please see the [CHANGELOG](CHANGELOG.md) file for a list of changes made in each version.
+Veuillez consulter le fichier [CHANGELOG](CHANGELOG.md) pour la liste des modifications apportées à chaque grande version.
