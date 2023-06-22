@@ -1,7 +1,7 @@
 import streamlit as st
 from pathlib import Path
 import pandas as pd
-from utils.load_data import Dataload
+from utils.load_data import Dataload, filter_by_date_for_model
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
@@ -13,6 +13,7 @@ import folium
 from folium.plugins import HeatMap
 from streamlit_folium import folium_static
 import os
+from datetime import datetime, timedelta
 
 from pathlib import Path
 # from utils.ressources import *
@@ -34,7 +35,7 @@ current_path = Path.cwd()
 df_dataviz = current_path / "data" / "df_dataviz.csv"
 df_city = current_path / "data" / "data_features_city.csv"
 path_images = current_path / "assets" / "images" / "features"
-df_data_features = current_path / "data" / "data_features.csv"
+df_data_features_path = current_path / "data" / "data_features_webapp.csv"
 path_model = current_path / "models"
 
 # Title of the application
@@ -100,16 +101,41 @@ elif page == 'analyse_exploratoire':
 
 
 elif page == "previsions_demonstration":
-    st.header("Modèles de prévision de la pluie")
 
-    df = Dataload(df_city).load_df()
+    st.title("Prévision de la pluie")
+    st.header("Météo du jour")
+    def afficher_calendrier_selection():
+        # Définir les dates minimale et maximale
+        date_min = datetime(2008, 12, 1)
+        date_max = datetime(2016, 4, 26)
 
-    display_map_rain(filter_by_date(df, "05/05/2014"), 'raintoday')
+        # Afficher le sélecteur de date dans Streamlit et récupérer la date sélectionnée
+        selected_date = st.date_input("Sélectionnez une date", value=datetime(2010, 8, 17), min_value=date_min, max_value=date_max)
 
-    model_random_forest = load_model(path_model / "randomforestclassifier_model.joblib")
+        # Convertir la date sélectionnée en format souhaité (%d/%m/%Y)
+        selected_date_str = selected_date.strftime("%d/%m/%Y")
 
-    evaluate_model(model_random_forest, df_data_features)
+        # Retourner la date sélectionnée au format souhaité
+        return selected_date_str
 
-    apply_model(model_random_forest, df_data_features)
 
+    # Afficher le calendrier de sélection et récupérer la date sélectionnée
+    date_selection = afficher_calendrier_selection()
+    df_data_features = Dataload(df_data_features_path).load_df()
+    st.write('Observation météo du', date_selection)
+    display_map_rain(df_data_features, str(date_selection), today=True)
 
+    if st.button("Prévision de la pluie du lendemain"):
+        st.header("Prévision de la pluie du lendemain")
+        model_random_forest = load_model(path_model / "randomforestclassifier_model.joblib")
+        st.write('Chargement et exécution du modèle :', str(model_random_forest).split("(")[0])
+        df_filtered_date = filter_by_date_for_model(df_data_features, str(date_selection))
+        prediction = apply_model(model_random_forest, df_filtered_date)
+        st.write('Performance du modèle :')
+        scores = evaluate_model(model_random_forest, df_data_features_path)
+        display_scores(scores)
+        date_selection_dt = datetime.strptime(date_selection, "%d/%m/%Y").date()
+        st.write('\n')
+        st.write('Prévision de la pluie du lendemain (', (date_selection_dt + timedelta(days=1)).strftime("%d/%m/%Y"), ')' )
+        display_map_rain(prediction, str(date_selection), today=False)
+        st.write(prediction.head())

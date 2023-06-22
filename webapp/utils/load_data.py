@@ -56,6 +56,24 @@ class Dataload:
         st.title("Données météo")
         st.write(self.df.head())
 
+def filter_by_date_for_model(df_dd, date_du_jour, return_index = False):
+    # Convertir les colonnes "annee", "mois" et "jour" en type entier
+    if type(df_dd) is not pd.DataFrame:
+        df_dd = pd.read_csv(df_dd, index_col=0)
+    df_dd['year'] = df_dd['year'].astype(int)
+    df_dd['month'] = df_dd['month'].astype(int)
+    df_dd['day'] = df_dd['day'].astype(int)
+
+    df_dd['date'] = pd.to_datetime(df_dd[['year', 'month', 'day']])
+    date_du_jour = pd.to_datetime(date_du_jour, format='%d/%m/%Y')
+    df_filtered = df_dd[df_dd['date'] == date_du_jour]
+    df_filtered = df_filtered.drop(['raintomorrow'], axis=1)
+    indexes = df_filtered.index
+    if return_index:
+        return indexes
+    else:
+        return df_filtered
+
 def filter_by_date(df, date_du_jour):
     # Convertir les colonnes "annee", "mois" et "jour" en type entier
     df['year'] = df['year'].astype(int)
@@ -63,11 +81,10 @@ def filter_by_date(df, date_du_jour):
     df['day'] = df['day'].astype(int)
 
     df['date'] = pd.to_datetime(df[['year', 'month', 'day']])
-    date_du_jour = pd.to_datetime(date_du_jour, format='%d/%m/%Y')
+    date_du_jour = pd.to_datetime(date_du_jour)
     df_filtered = df[df['date'] == date_du_jour]
+
     return df_filtered
-
-
 
 
 if __name__ == '__main__':

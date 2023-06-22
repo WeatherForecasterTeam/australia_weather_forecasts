@@ -8,7 +8,7 @@ from utils.load_data import Dataload
 
 PARAM_MODELS = Path.cwd().parent / "webapp" / "models" / "models_params.json"
 path_model = Path.cwd().parent / "webapp" / "models"
-path_df = Path.cwd().parent / "webapp" / "data" / "data_features.csv"
+path_df = Path.cwd().parent / "webapp" / "data" / "data_features_webapp.csv"
 
 
 def instantiate_model(model_name):
@@ -62,8 +62,33 @@ def evaluate_model(model, dataset):
 
 
 def apply_model(model, dataset):
-    X_train, X_test, y_train, y_test = Dataload(dataset).split_data_train_test()
-    predictions = model.predict(X_test)
-    prediction_scores = model.predict_proba(X_test)[:, 1]
+    if dataset.columns.str.contains('raintomorrow').any():
+        dataset = dataset.drop(columns='raintomorrow', axis=1)
+    if dataset.columns.str.contains('date').any():
+        dataset = dataset.drop(columns='date', axis=1)
+    predictions = model.predict(dataset)
+    prediction_scores = model.predict_proba(dataset)
     print("apply_model done")
-    return predictions, prediction_scores
+    dataset['raintomorrow'] = predictions
+    return dataset
+
+
+import streamlit as st
+import pandas as pd
+
+def display_scores(scores):
+    # Formater les valeurs en pourcentage dans le dictionnaire
+    data = {
+        'Accuracy': [f'{scores[0]:.2%}'],
+        'F1-score (weighted)': [f'{scores[1]:.2%}']
+    }
+
+    # Créer un DataFrame avec les scores formatés
+    df_scores = pd.DataFrame(data)
+
+    # Exclure l'index et centrer les colonnes
+    html_table = df_scores.to_html(index=False, justify='center')
+
+    # Afficher le tableau HTML
+    st.write(html_table, unsafe_allow_html=True)
+

@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
 from pathlib import Path
+from utils.load_data import filter_by_date
 
 
 # Définition des couleurs pour chaque type de géographie
@@ -32,6 +33,10 @@ colors_climat = {'Chaud humide': 'green',
                  'Méditerranéen': 'orange'}
 colors_rain = {0: 'red',
                1: 'blue'}
+
+current_path = Path.cwd()
+sunny_icon_path = current_path / "assets" / "images" / "sunny-svg-2.png"
+rainfall_icon_path = current_path / "assets" / "images" / "raincloud2.png"
 
 
 def display_map_climat(df):
@@ -52,7 +57,7 @@ def display_map_climat(df):
     st.plotly_chart(fig, use_container_width=True)
 
 
-def display_map_rain(df, day):
+def display_map_rain_model(df, day):
     # Création de la carte centrée sur l'Australie
     map = folium.Map(location=[-25, 135], zoom_start=4)
 
@@ -73,6 +78,41 @@ def display_map_rain(df, day):
 
     # Afficher la carte dans Streamlit
     folium_static(map)
+
+
+def display_map_rain(df_in, day, today=True):
+    # Création de la carte centrée sur l'Australie
+    df_filter = filter_by_date(df_in, day)
+    # Carte centrée sur l'Australie
+    m = folium.Map(location=[-25.2744, 133.7751], zoom_start=4)
+
+    if today:
+        # Déterminer les icônes en fonction de la valeur de raintomorrow
+        conditions = [
+            df_filter['raintoday'] == 0,
+            df_filter['raintoday'] == 1
+        ]
+    else:
+        # Déterminer les icônes en fonction de la valeur de raintomorrow
+        conditions = [
+            df_filter['raintomorrow'] == 0,
+            df_filter['raintomorrow'] == 1
+        ]
+    icon_paths = [str(sunny_icon_path), str(rainfall_icon_path)]
+
+    # Ajouter les marqueurs à la carte avec les icônes personnalisées
+    for condition, icon_path in zip(conditions, icon_paths):
+        filtered_data = df_filter[condition]
+        for _, row in filtered_data.iterrows():
+            lat = row['latitude']  # Latitude
+            lon = row['longitude']  # Longitude
+
+            # Ajouter le marqueur à la carte avec l'icône personnalisée
+            icon = folium.CustomIcon(icon_image=icon_path, icon_size=(40, 40))
+            folium.Marker(location=[lat, lon], icon=icon).add_to(m)
+
+    # Afficher la carte dans le notebook
+    return folium_static(m)
 
 
 def display_radar(df):
