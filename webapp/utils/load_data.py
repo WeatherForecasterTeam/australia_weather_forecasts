@@ -5,6 +5,8 @@ from sklearn.model_selection import train_test_split
 
 current_path = Path.cwd()
 path_df_dataviz = current_path.parent / "data" / "df_dataviz.csv"
+table_city = current_path / "data" / "table_city.csv"
+
 
 class Dataload:
     def __init__(self, file_path):
@@ -86,6 +88,10 @@ def filter_by_date(df, date_du_jour):
 
     return df_filtered
 
+def add_city_name(df):
+    df_city = Dataload(table_city).load_df().reset_index(drop=False)
+    df = pd.merge(df, df_city, on=['latitude', 'longitude'], how='left')
+    return df
 
 if __name__ == '__main__':
     print(path_df_dataviz)

@@ -1,7 +1,7 @@
 import streamlit as st
 from pathlib import Path
 import pandas as pd
-from utils.load_data import Dataload, filter_by_date_for_model
+from utils.load_data import Dataload, filter_by_date_for_model, add_city_name
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
@@ -37,6 +37,7 @@ df_city = current_path / "data" / "data_features_city.csv"
 path_images = current_path / "assets" / "images" / "features"
 df_data_features_path = current_path / "data" / "data_features_webapp.csv"
 path_model = current_path / "models"
+table_city = current_path / "data" / "table_city.csv"
 
 # Title of the application
 st.title("Rain in Australia")
@@ -138,4 +139,11 @@ elif page == "previsions_demonstration":
         st.write('\n')
         st.write('Prévision de la pluie du lendemain (', (date_selection_dt + timedelta(days=1)).strftime("%d/%m/%Y"), ')' )
         display_map_rain(prediction, str(date_selection), today=False)
-        st.write(prediction.head())
+        prediction = add_city_name(prediction)
+
+        filtered_cities = prediction[(prediction['raintomorrow'] == 1)]['location'].unique()
+
+        st.write("Villes où il va pleuvoir demain :")
+        for city in filtered_cities:
+            st.write("    -", city)
+

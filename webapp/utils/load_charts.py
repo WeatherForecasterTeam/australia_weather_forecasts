@@ -17,7 +17,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
 from pathlib import Path
-from utils.load_data import filter_by_date
+from utils.load_data import filter_by_date, add_city_name
+
 
 
 # Définition des couleurs pour chaque type de géographie
@@ -59,7 +60,7 @@ def display_map_climat(df):
 
 def display_map_rain_model(df, day):
     # Création de la carte centrée sur l'Australie
-    map = folium.Map(location=[-25, 135], zoom_start=4)
+    map = folium.Map(location=[-25, 135], zoom_start=3)
 
     # Parcourir chaque ligne du DataFrame
     for index, row in df.iterrows():
@@ -81,10 +82,11 @@ def display_map_rain_model(df, day):
 
 
 def display_map_rain(df_in, day, today=True):
-    # Création de la carte centrée sur l'Australie
+    # Création de la carte centrée sur l'Australie avec le fond de carte Stamen Terrain
     df_filter = filter_by_date(df_in, day)
+    df_filter = add_city_name(df_filter)
     # Carte centrée sur l'Australie
-    m = folium.Map(location=[-25.2744, 133.7751], zoom_start=4)
+    m = folium.Map(location=[-25.2744, 133.7751], zoom_start=3)
 
     if today:
         # Déterminer les icônes en fonction de la valeur de raintomorrow
@@ -106,10 +108,11 @@ def display_map_rain(df_in, day, today=True):
         for _, row in filtered_data.iterrows():
             lat = row['latitude']  # Latitude
             lon = row['longitude']  # Longitude
-
-            # Ajouter le marqueur à la carte avec l'icône personnalisée
+            location = row['location']  # Nom de la ville
             icon = folium.CustomIcon(icon_image=icon_path, icon_size=(40, 40))
-            folium.Marker(location=[lat, lon], icon=icon).add_to(m)
+            marker = folium.Marker(location=[lat, lon], icon=icon)
+            marker.add_child(folium.Tooltip(location))
+            marker.add_to(m)
 
     # Afficher la carte dans le notebook
     return folium_static(m)
