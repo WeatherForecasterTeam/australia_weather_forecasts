@@ -59,7 +59,7 @@ def display_map_climat(df):
 
 def display_map_rain_model(df, day):
     # Création de la carte centrée sur l'Australie
-    map = folium.Map(location=[-25, 135], zoom_start=4)
+    map = folium.Map(location=[-25, 135], zoom_start=3)
 
     # Parcourir chaque ligne du DataFrame
     for index, row in df.iterrows():
@@ -84,7 +84,7 @@ def display_map_rain(df_in, day, today=True):
     # Création de la carte centrée sur l'Australie
     df_filter = filter_by_date(df_in, day)
     # Carte centrée sur l'Australie
-    m = folium.Map(location=[-25.2744, 133.7751], zoom_start=4)
+    m = folium.Map(location=[-25.2744, 133.7751], zoom_start=3)
 
     if today:
         # Déterminer les icônes en fonction de la valeur de raintomorrow

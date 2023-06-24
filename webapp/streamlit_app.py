@@ -37,6 +37,7 @@ df_city = current_path / "data" / "data_features_city.csv"
 path_images = current_path / "assets" / "images" / "features"
 df_data_features_path = current_path / "data" / "data_features_webapp.csv"
 path_model = current_path / "models"
+table_city = current_path / "data" / "table_city.csv"
 
 # Title of the application
 st.title("Rain in Australia")
@@ -138,4 +139,14 @@ elif page == "previsions_demonstration":
         st.write('\n')
         st.write('Prévision de la pluie du lendemain (', (date_selection_dt + timedelta(days=1)).strftime("%d/%m/%Y"), ')' )
         display_map_rain(prediction, str(date_selection), today=False)
-        st.write(prediction.head())
+
+        table_city = Dataload(table_city).load_df().reset_index(drop=False)
+
+        prediction = pd.merge(prediction, table_city, on=['latitude', 'longitude'], how='left')
+
+        filtered_cities = prediction[(prediction['raintomorrow'] == 1)]['location'].unique()
+
+        st.write("Villes où il va pleuvoir demain :")
+        for city in filtered_cities:
+            st.write("    -", city)
+
