@@ -1,0 +1,19 @@
+{
+    "DecisionTreeClassifier": {
+        "class_weight": "balanced",
+        "criterion": "gini",
+        "max_depth": 40,
+        "max_features": null,
+        "max_leaf_nodes": 10,
+        "random_state": 4,
+        "splitter": "best"
+    },
+
+    "RandomForestClassifier": {
+        "class_weight": "balanced",
+        "criterion": "gini",
+        "n_estimators" : 100,
+        "random_state" : 42
+    }
+}
+
