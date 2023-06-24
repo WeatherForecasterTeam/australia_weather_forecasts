@@ -7,7 +7,7 @@ current_path = Path.cwd()
 path_df_dataviz = current_path.parent / "data" / "df_dataviz.csv"
 table_city = current_path / "data" / "table_city.csv"
 
-#test commit
+#test commit ²
 class Dataload:
     def __init__(self, file_path):
         self.file_path = file_path
