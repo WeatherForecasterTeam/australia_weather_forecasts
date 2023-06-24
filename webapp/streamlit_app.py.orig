@@ -139,10 +139,14 @@ elif page == "previsions_demonstration":
         st.write('\n')
         st.write('Prévision de la pluie du lendemain (', (date_selection_dt + timedelta(days=1)).strftime("%d/%m/%Y"), ')' )
         display_map_rain(prediction, str(date_selection), today=False)
+<<<<<<< HEAD
+        prediction = add_city_name(prediction)
+=======
 
         table_city = Dataload(table_city).load_df().reset_index(drop=False)
 
         prediction = pd.merge(prediction, table_city, on=['latitude', 'longitude'], how='left')
+>>>>>>> 73474e62b631257af6a986eb1c21bdff399b2ef4
 
         filtered_cities = prediction[(prediction['raintomorrow'] == 1)]['location'].unique()
 
