@@ -1,6 +1,8 @@
 from sklearn.metrics import classification_report
 from joblib import dump, load
 from pathlib import Path
+import streamlit as st
+import pandas as pd
 import json
 
 from utils.load_data import Dataload
@@ -72,9 +74,6 @@ def apply_model(model, dataset):
     dataset['raintomorrow'] = predictions
     return dataset
 
-
-import streamlit as st
-import pandas as pd
 
 def display_scores(scores):
     # Formater les valeurs en pourcentage dans le dictionnaire

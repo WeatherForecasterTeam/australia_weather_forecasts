@@ -1,25 +1,13 @@
-import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
-import seaborn as sns
-import streamlit as st
 import folium
-from folium.plugins import HeatMap
 from streamlit_folium import folium_static
 from PIL import Image
-import os
-import pandas as pd
-
-import seaborn as sns
-import streamlit as st
-
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
 from pathlib import Path
 from utils.load_data import filter_by_date, add_city_name
-
-
 
 # Définition des couleurs pour chaque type de géographie
 colors = {'coastal': 'blue',
@@ -173,11 +161,11 @@ def display_radar(df):
 
 
 # Définition des couleurs pour chaque type de géographie
-colors = {'coastal': 'blue',
-          'valley': 'green',
-          'mountainous': 'purple',
-          'desert': 'darkgoldenrod',
-          'island': 'skyblue'}
+# colors = {'coastal': 'blue',
+#           'valley': 'green',
+#           'mountainous': 'purple',
+#           'desert': 'darkgoldenrod',
+#           'island': 'skyblue'}
 
 
 def display_features(df, path_images):
@@ -222,7 +210,6 @@ def display_features(df, path_images):
         st.image(str(filepath))  # Convertir le chemin en chaîne
 
 
-
 def plot_rain_forecast(df):
     df_group = df.groupby(['climat', 'raintomorrow']).size().reset_index(name='counts')
 
@@ -250,6 +237,7 @@ def display_features_png(path_images):
     for filepath in png_files:
         image = Image.open(filepath)
         st.image(image, use_column_width=True)
+
 
 def plot_humidity_distribution(df):
     fig = px.histogram(df, x="humidity3pm", color="raintomorrow", nbins=100, barmode="overlay")
