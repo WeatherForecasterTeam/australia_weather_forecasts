@@ -105,6 +105,42 @@ def display_map_rain(df_in, day, today=True):
     # Afficher la carte dans le notebook
     return folium_static(m)
 
+def display_map_rain_with_filter(df_in, day, city_or_climat, today=True):
+    # Création de la carte centrée sur l'Australie avec le fond de carte Stamen Terrain
+    df_filter = filter_by_date(df_in, day)
+    df_filter = add_city_name(df_filter)
+    df_filter = df_filter[df_filter['location'] == city_or_climat]
+    # Carte centrée sur l'Australie
+    m = folium.Map(location=[-25.2744, 133.7751], zoom_start=3)
+
+    if today:
+        # Déterminer les icônes en fonction de la valeur de raintomorrow
+        conditions = [
+            df_filter['raintoday'] == 0,
+            df_filter['raintoday'] == 1
+        ]
+    else:
+        # Déterminer les icônes en fonction de la valeur de raintomorrow
+        conditions = [
+            df_filter['raintomorrow'] == 0,
+            df_filter['raintomorrow'] == 1
+        ]
+    icon_paths = [str(sunny_icon_path), str(rainfall_icon_path)]
+
+    # Ajouter les marqueurs à la carte avec les icônes personnalisées
+    for condition, icon_path in zip(conditions, icon_paths):
+        filtered_data = df_filter[condition]
+        for _, row in filtered_data.iterrows():
+            lat = row['latitude']  # Latitude
+            lon = row['longitude']  # Longitude
+            location = row['location']  # Nom de la ville
+            icon = folium.CustomIcon(icon_image=icon_path, icon_size=(40, 40))
+            marker = folium.Marker(location=[lat, lon], icon=icon)
+            marker.add_child(folium.Tooltip(location))
+            marker.add_to(m)
+
+    # Afficher la carte dans le notebook
+    return folium_static(m)
 
 def display_radar(df):
     # Labels pour chaque axe du graphe en mode radar

@@ -39,6 +39,20 @@ path_images = current_path / "assets" / "images" / "features"
 df_data_features_path = current_path / "data" / "data_features_webapp.csv"
 path_model = current_path / "models"
 table_city = current_path / "data" / "table_city.csv"
+df_chaud_humide_path = current_path / "data" /"df_chaud_humide.csv"
+df_tempere_froid_path = current_path / "data" /"df_tempere_froid.csv"
+df_mediterraneen_path = current_path / "data" /"df_mediterraneen.csv"
+df_sec_path = current_path / "data" /"df_sec.csv"
+df_local_path = current_path / "data" /"df_local.csv"
+
+df_climate_path = [df_chaud_humide_path, df_tempere_froid_path, df_mediterraneen_path, df_sec_path, df_local_path]
+climate_model = ["randomforestclassifier_model.joblib",
+"randomforestclassifier_chaud_humide_model.joblib",
+"randomforestclassifier_tempere_froid_model.joblib",
+"randomforestclassifier_mediterraneen_model.joblib",
+"randomforestclassifier_sec_model.joblib",
+"randomforestclassifier_local_model.joblib"]
+
 
 # Title of the application
 st.title("Rain in Australia")
@@ -46,7 +60,19 @@ st.title("Rain in Australia")
 tabs = ["meteo_australie",
         "analyse_exploratoire",
         "previsions_demonstration",
+        "previsions_optimisation",
         "conclusion_perspectives"]
+
+# Liste des suggestions
+suggestions_villes = ['Albury', 'Badgerys Creek', 'Cobar', 'Coffs Harbour', 'Moree', 'Norah Head', 'Norfolk Island',
+                      'Sydney', 'Sydney Airport', 'Wagga Wagga', 'Williamtown', 'Wollongong', 'Canberra', 'Tuggeranong',
+                      'Ballarat', 'Bendigo', 'Sale', 'Melbourne Airport', 'Melbourne', 'Mildura', 'Portland',
+                      'Watsonia',
+                      'Dartmoor', 'Brisbane', 'Cairns', 'Gold Coast', 'Townsville', 'Mount Gambier', 'Nuriootpa',
+                      'Woomera',
+                      'Witchcliffe', 'Pearce RAAF', 'Perth Airport', 'Perth', 'Walpole', 'Hobart', 'Launceston',
+                      'Alice Springs', 'Darwin', 'Katherine', 'Uluru']
+
 
 page = st.sidebar.selectbox("Sélectionnez un onglet", tabs)
 
@@ -112,7 +138,7 @@ elif page == "previsions_demonstration":
         date_max = datetime(2016, 4, 26)
 
         # Afficher le sélecteur de date dans Streamlit et récupérer la date sélectionnée
-        selected_date = st.date_input("Sélectionnez une date", value=datetime(2010, 8, 18), min_value=date_min, max_value=date_max)
+        selected_date = st.date_input("Sélectionnez une date", value=datetime(2010, 8, 20), min_value=date_min, max_value=date_max)
 
         # Convertir la date sélectionnée en format souhaité (%d/%m/%Y)
         selected_date_str = selected_date.strftime("%d/%m/%Y")
@@ -133,9 +159,9 @@ elif page == "previsions_demonstration":
         st.write('Chargement et exécution du modèle :', str(model_random_forest).split("(")[0])
         df_filtered_date = filter_by_date_for_model(df_data_features, str(date_selection))
         prediction = apply_model(model_random_forest, df_filtered_date)
-        st.write('Performance du modèle :')
-        scores = evaluate_model(model_random_forest, df_data_features_path)
-        display_scores(scores)
+        #st.write('Performance du modèle :')
+        #scores = evaluate_model(model_random_forest, df_data_features_path)
+        #display_scores(scores)
         date_selection_dt = datetime.strptime(date_selection, "%d/%m/%Y").date()
         st.write('\n')
         st.write('Prévision de la pluie du lendemain (', (date_selection_dt + timedelta(days=1)).strftime("%d/%m/%Y"), ')' )
@@ -150,4 +176,57 @@ elif page == "previsions_demonstration":
         st.write("Villes où il va pleuvoir demain :")
         for city in filtered_cities:
             st.write("    -", city)
+
+elif page == "previsions_optimisation":
+
+    st.title("Prévision de la pluie")
+    st.header("Météo du jour")
+    def afficher_calendrier_selection():
+        # Définir les dates minimale et maximale
+        date_min = datetime(2008, 12, 1)
+        date_max = datetime(2016, 4, 26)
+
+        # Afficher le sélecteur de date dans Streamlit et récupérer la date sélectionnée
+        selected_date = st.date_input("Sélectionnez une date", value=datetime(2010, 8, 20), min_value=date_min, max_value=date_max)
+
+        # Convertir la date sélectionnée en format souhaité (%d/%m/%Y)
+        selected_date_str = selected_date.strftime("%d/%m/%Y")
+
+        # Retourner la date sélectionnée au format souhaité
+        return selected_date_str
+
+
+
+    # Afficher le calendrier de sélection et récupérer la date sélectionnée
+    date_selection = afficher_calendrier_selection()
+    df_data_features = Dataload(df_data_features_path).load_df()
+    st.write('Observation météo du', date_selection)
+    display_map_rain(df_data_features, str(date_selection), today=True)
+
+    st.write('Choisir une ville ou un climat :')
+    # Champ de saisie avec autocomplétion
+    selected_city = st.selectbox('Saisir une ville', suggestions_villes)
+    # Affichage de la ville sélectionnée
+    st.write('Observation météo de la ville :', selected_city, 'le', date_selection)
+    display_map_rain_with_filter(df_data_features, str(date_selection), selected_city, today=True)
+
+    if st.button("Prévision de la pluie du lendemain"):
+        st.header("Prévision de la pluie du lendemain")
+        model_random_forest = load_model(path_model / get_model(selected_city))
+        st.write('Chargement et exécution du modèle :', str(model_random_forest).split("(")[0])
+        df_filtered_date = filter_by_date_for_model(df_data_features, str(date_selection))
+        prediction = apply_model(model_random_forest, df_filtered_date)
+        #st.write('Performance du modèle :')
+        #scores = evaluate_model(model_random_forest, df_data_features_path)
+        #display_scores(scores)
+        date_selection_dt = datetime.strptime(date_selection, "%d/%m/%Y").date()
+        st.write('\n')
+        st.write('Prévision de la pluie du lendemain (', (date_selection_dt + timedelta(days=1)).strftime("%d/%m/%Y"), ')' )
+        display_map_rain_with_filter(prediction, str(date_selection), selected_city, today=False)
+
+        table_city = Dataload(table_city).load_df().reset_index(drop=False)
+
+        prediction = pd.merge(prediction, table_city, on=['latitude', 'longitude'], how='left')
+
+        filtered_cities = prediction[(prediction['raintomorrow'] == 1)]['location'].unique()
 

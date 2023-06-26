@@ -6,7 +6,7 @@ import pandas as pd
 import json
 
 from utils.load_data import Dataload
-
+table_city_climat_model = Path.cwd().parent / "webapp" / "data" / "table_climat_city_model.csv"
 
 PARAM_MODELS = Path.cwd().parent / "webapp" / "models" / "models_params.json"
 path_model = Path.cwd().parent / "webapp" / "models"
@@ -91,3 +91,18 @@ def display_scores(scores):
     # Afficher le tableau HTML
     st.write(html_table, unsafe_allow_html=True)
 
+
+def get_model(city_or_climate):
+    df_city_climat_model = Dataload(table_city_climat_model).load_df()
+    row = df_city_climat_model[df_city_climat_model["ville"] == city_or_climate]
+    if row.empty:
+        row = df_city_climat_model[df_city_climat_model["climat"] == city_or_climate]
+
+    # Vérifier si une correspondance a été trouvée
+    if not row.empty:
+        model_file = row["modele"].values[0]
+        # Charger le modèle à partir du fichier
+        return model_file
+
+    # Aucune correspondance trouvée
+    return None
