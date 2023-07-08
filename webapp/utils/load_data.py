@@ -93,6 +93,34 @@ def add_city_name(df):
     df = pd.merge(df, df_city, on=['latitude', 'longitude'], how='left')
     return df
 
+import pandas as pd
+
+def process_weather_data(observations):
+    temp_city = observations['temp3pm'] if 'temp3pm' in observations else observations['temp_amplitude']
+    humidity_city = observations['humidity3pm']
+    wind_city = observations['windspeed3pm']
+
+    if not temp_city.empty:
+        temp_city_value = temp_city.iloc[0]
+    else:
+        temp_city_value = 17  # Default temperature set to 17°C if no data
+
+    if not humidity_city.empty:
+        humidity_city_value = humidity_city.iloc[0]
+    else:
+        humidity_city_value = 30  # Default humidity set to 30% if no data
+
+    if not wind_city.empty:
+        wind_city_value = wind_city.iloc[0]
+    else:
+        wind_city_value = 9  # Default wind speed set to 9 if no data
+
+    return temp_city_value, humidity_city_value, wind_city_value
+
+
+
+
+
 if __name__ == '__main__':
     print(path_df_dataviz)
     Dataload(path_df_dataviz).load_df()
