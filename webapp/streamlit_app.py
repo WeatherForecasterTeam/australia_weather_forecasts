@@ -250,14 +250,27 @@ elif page == "previsions_optimisation":
     col3.metric("Vent", str(int(wind_city)) + " km/h")
     col4.metric("Humidité", str(int(humidity_city)) + " %")
 
+    temp_city_today, wind_city_today, humidity_city_today = process_weather_data(
+        observations_selected_city_dataviz_filtered_date_tomorrow)
+
+    st.write('Observation météo de la ville :', selected_city, 'le', tomorrow_date_selection.strftime("%d/%m/%Y"))
+    col1, col2, col3, col4 = st.columns(4)
+    col1.caption("Situation du lendemain")
+    if (observations_selected_city['raintomorrow'] == 0).all():
+        col1.image(icon_paths[0], width=90)
+    else:
+        col1.image(icon_paths_rain[0], width=90)
+    col2.metric("Température pm", str(int(temp_city_today)) + " °C")
+    col3.metric("Vent", str(int(wind_city_today)) + " km/h")
+    col4.metric("Humidité", str(int(humidity_city_today)) + " %")
+
     if st.button("Prévision de la pluie du lendemain"):
         date_selection = date_selection.strftime("%d/%m/%Y")
         st.write('\n')
         st.header("Prévision de la pluie du lendemain")
         model_random_forest = load_model(path_model / get_model(selected_city))
-        st.write('Chargement et exécution du modèle :', str(model_random_forest).split("(")[0])
-        st.write('\n')
-        st.write('\n')
+        model_name = get_model_name(selected_city)
+        st.write('Chargement et exécution du modèle :', str(model_random_forest).split("(")[0], 'du climat', model_name)
         df_filtered_date = filter_by_date_for_model(df_data_features, str(date_selection))
         prediction = apply_model(model_random_forest, df_filtered_date)
         #st.write('Performance du modèle :')
@@ -270,7 +283,7 @@ elif page == "previsions_optimisation":
 
         prediction = pd.merge(prediction, table_city, on=['latitude', 'longitude'], how='left')
         prediction = prediction[prediction['location'] == selected_city]
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2  = st.columns(2)
         col1.caption("Prévision du lendemain")
         if (prediction['raintomorrow'] == 0).all():
             col1.image(icon_paths[0], width=90)
@@ -280,9 +293,15 @@ elif page == "previsions_optimisation":
 
         temp_city_prev, wind_city_prev, humidity_city_prev = process_weather_data(observations_selected_city_dataviz_filtered_date_tomorrow)
 
-        col2.metric("Température pm", str(int(temp_city_prev)) + " °C")
-        col3.metric("Vent", str(int(wind_city_prev)) + " km/h")
-        col4.metric("Humidité", str(int(humidity_city_prev)) + " %")
+        if (prediction['raintomorrow'] == 0).all():
+            col2.write("Pas de pluie prévue")
+        else:
+            col1.image(icon_paths_rain[0], width=90)
+            col2.write("Pluie prévue")
+
+
+
+
 
         filtered_cities = prediction[(prediction['raintomorrow'] == 1)]['location'].unique()
 
