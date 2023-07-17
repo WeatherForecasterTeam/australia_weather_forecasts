@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 # from utils.ressources import *
 # from utils.load_and_apply_model import *
-from utils.load_data import filter_by_date
+from utils.load_data import filter_by_date, afficher_calendrier_selection
 from utils.load_and_apply_model import *
 
 
@@ -144,19 +144,6 @@ elif page == "previsions_demonstration":
 
     st.title("Prévision de la pluie")
     st.header("Météo du jour")
-    def afficher_calendrier_selection():
-        # Définir les dates minimale et maximale
-        date_min = datetime(2008, 12, 1)
-        date_max = datetime(2016, 4, 26)
-
-        # Afficher le sélecteur de date dans Streamlit et récupérer la date sélectionnée
-        selected_date = st.date_input("Sélectionnez une date", value=datetime(2010, 8, 20), min_value=date_min, max_value=date_max)
-
-        # Convertir la date sélectionnée en format souhaité (%d/%m/%Y)
-        selected_date_str = selected_date.strftime("%d/%m/%Y")
-
-        # Retourner la date sélectionnée au format souhaité
-        return selected_date_str
 
 
     # Afficher le calendrier de sélection et récupérer la date sélectionnée

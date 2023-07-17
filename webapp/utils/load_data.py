@@ -2,6 +2,8 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 from sklearn.model_selection import train_test_split
+from datetime import datetime, timedelta
+
 
 current_path = Path.cwd()
 path_df_dataviz = current_path.parent / "data" / "df_dataviz.csv"
@@ -117,6 +119,20 @@ def process_weather_data(observations):
 
     return temp_city_value, humidity_city_value, wind_city_value
 
+
+def afficher_calendrier_selection():
+    # Définir les dates minimale et maximale
+    date_min = datetime(2008, 12, 1)
+    date_max = datetime(2016, 4, 26)
+
+    # Afficher le sélecteur de date dans Streamlit et récupérer la date sélectionnée
+    selected_date = st.date_input("Sélectionnez une date", value=datetime(2008, 12, 30), min_value=date_min, max_value=date_max)
+
+    # Convertir la date sélectionnée en format souhaité (%d/%m/%Y)
+    selected_date_str = selected_date.strftime("%d/%m/%Y")
+
+    # Retourner la date sélectionnée au format souhaité
+    return selected_date_str
 
 
 
